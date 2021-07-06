@@ -14,6 +14,9 @@ interface BooksDao {
     @Query("SELECT * FROM books")
     fun getBooks(): Single<List<Book>>
 
+    @Query("SELECT * FROM books WHERE title = :title AND author = :author")
+    fun getBook(title: String, author: String): Single<Book>
+
     @Insert(onConflict = REPLACE)
     fun retain(books: List<Book>): Completable
 

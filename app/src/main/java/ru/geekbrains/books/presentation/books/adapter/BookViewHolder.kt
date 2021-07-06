@@ -14,7 +14,7 @@ class BookViewHolder(
         with(viewBinding) {
             bookImage.setImageFromUri(book.book_image)
             bookTitle.text = book.title
-
+            bookAuthor.text = book.author
             root.click { delegate?.onBookPicked(book) }
         }
     }

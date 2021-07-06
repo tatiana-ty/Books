@@ -1,5 +1,6 @@
 package ru.geekbrains.books.data.book.datasource.cache
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import ru.geekbrains.books.data.book.model.Book
 import ru.geekbrains.books.data.storage.BooksDao
@@ -16,11 +17,15 @@ class CacheBooksDataSourceImpl
         booksStorage
             .booksDao()
 
-    override fun getBooks(): Single<List<Book>> =
+    override fun getBooks(): Observable<List<Book>> =
         booksDao
-            .getBooks()
+            .getBooks().toObservable()
 
-    override fun retain(books: List<Book>): Single<List<Book>> =
+    override fun getBook(title: String, author: String): Single<Book> =
+        booksDao
+            .getBook(title, author)
+
+    override fun retain(books: List<Book>): Observable<List<Book>> =
         booksDao
             .retain(books)
             .andThen(getBooks())
