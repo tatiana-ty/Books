@@ -10,4 +10,6 @@ interface BookView : ErrorView, MvpView {
     @SingleState
     fun showBook(book: Book)
 
+    @SingleState
+    fun onFavChanged(book: Book)
 }

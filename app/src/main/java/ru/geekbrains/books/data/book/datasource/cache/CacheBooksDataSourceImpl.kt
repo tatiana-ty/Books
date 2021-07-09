@@ -25,6 +25,20 @@ class CacheBooksDataSourceImpl
         booksDao
             .getBook(title, author)
 
+    override fun fav(title: String, author: String): Single<Book> =
+        booksDao
+            .fav(title, author)
+            .andThen(getBook(title, author))
+
+    override fun unFav(title: String, author: String): Single<Book> =
+        booksDao
+            .unFav(title, author)
+            .andThen(getBook(title, author))
+
+    override fun getFavs(): Single<List<Book>> =
+        booksDao
+            .getFavs()
+
     override fun retain(books: List<Book>): Observable<List<Book>> =
         booksDao
             .retain(books)
