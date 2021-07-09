@@ -12,6 +12,7 @@ import ru.geekbrains.books.arguments
 import ru.geekbrains.books.data.book.model.Book
 import ru.geekbrains.books.databinding.FragmentBookBinding
 import ru.geekbrains.books.presentation.abs.AbsFragment
+import ru.geekbrains.books.setImageFromUri
 import javax.inject.Inject
 
 class BookFragment : AbsFragment(fragment_book), BookView {
@@ -19,10 +20,11 @@ class BookFragment : AbsFragment(fragment_book), BookView {
     companion object {
 
         private const val ARG_BOOK_TITLE = "bookTitle"
+        private const val ARG_BOOK_AUTHOR = "bookAuthor"
 
-        fun newInstance(bookTitle: String): Fragment =
+        fun newInstance(bookTitle: String, bookAuthor: String): Fragment =
             BookFragment()
-                .arguments(ARG_BOOK_TITLE to bookTitle)
+                .arguments(ARG_BOOK_TITLE to bookTitle, ARG_BOOK_AUTHOR to bookAuthor)
 
     }
 
@@ -30,12 +32,16 @@ class BookFragment : AbsFragment(fragment_book), BookView {
         arguments?.getString(ARG_BOOK_TITLE) ?: ""
     }
 
+    private val bookAuthor: String by lazy {
+        arguments?.getString(ARG_BOOK_AUTHOR) ?: ""
+    }
+
     @Inject
     lateinit var bookPresenterFactory: BookPresenterFactory
 
     @Suppress("unused")
     private val presenter: BookPresenter by moxyPresenter {
-        bookPresenterFactory.create(bookTitle)
+        bookPresenterFactory.create(bookTitle, bookAuthor)
     }
 
     private var viewBinding: FragmentBookBinding? = null
@@ -51,8 +57,13 @@ class BookFragment : AbsFragment(fragment_book), BookView {
             .root
 
     override fun showBook(book: Book) {
-        viewBinding?.userId?.text = book.title
-        viewBinding?.userName?.text = book.author
+        with(viewBinding!!) {
+            title.text = book.title
+            author.text = book.author
+            publisher.text = book.publisher
+            description.text = book.description
+            image.setImageFromUri(book.book_image)
+        }
     }
 
     override fun showError(message: String?) {

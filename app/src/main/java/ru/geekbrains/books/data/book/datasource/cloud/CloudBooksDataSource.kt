@@ -1,5 +1,6 @@
 package ru.geekbrains.books.data.book.datasource.cloud
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import ru.geekbrains.books.data.api.BooksApi
 import ru.geekbrains.books.data.book.datasource.BooksDataSource
@@ -12,16 +13,16 @@ class CloudBooksDataSource
         private val booksApi: BooksApi
             ) : BooksDataSource {
 
-    override fun getBooks(): Single<List<Book>> {
+    override fun getBooks(): Observable<List<Book>> {
         val res = booksApi
             .getBooks()
             .delay(1L, SECONDS)
-        val books = emptyList<Book>().toMutableList()
-        for(i in res.blockingGet().results.lists) {
-            books += i.books
-        }
-        return Single.just(books)
-    }
+            .flattenAsObservable { books -> books.results.lists }
+            //.map { list -> list.books }
+            //.toList()
+            .map { list -> list.books}
 
+        return res
+    }
 
 }

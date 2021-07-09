@@ -1,11 +1,13 @@
 package ru.geekbrains.books.data.book
 
+import io.reactivex.Observable
 import io.reactivex.Single
 import ru.geekbrains.books.data.book.datasource.BooksDataSource
 import ru.geekbrains.books.data.book.datasource.cache.CacheBooksDataSource
 import ru.geekbrains.books.data.book.model.Book
 import ru.geekbrains.books.di.Cache
 import ru.geekbrains.books.di.Cloud
+import java.lang.Exception
 import javax.inject.Inject
 
 class BooksRepositoryImpl
@@ -14,17 +16,19 @@ class BooksRepositoryImpl
     @Cache private val cacheBooksDataSource: CacheBooksDataSource,
 ) : BooksRepository{
 
-    override fun getBooks(): Single<List<Book>> =
-        cacheBooksDataSource
-            .getBooks()
-            .flatMap(::getFromCloudIfRequired)
-
-    private fun getFromCloudIfRequired(books: List<Book>): Single<List<Book>> =
-        if (books.isEmpty()) {
+    override fun getBooks(): Observable<List<Book>> =
+//        try {
             cloudBooksDataSource
                 .getBooks()
                 .flatMap(cacheBooksDataSource::retain)
-        } else {
-            Single.just(books)
-        }
+//        } catch (e: Exception) {
+//            println("here")
+//
+//            cacheBooksDataSource
+//                .getBooks()
+//        }
+
+    override fun getBook(title: String, author: String): Single<Book> =
+        cacheBooksDataSource
+            .getBook(title, author)
 }

@@ -20,7 +20,7 @@ data class Book (
     @ColumnInfo(name = "description")
     @SerializedName("description")
     val description: String,
-    @ColumnInfo(name = "created_date")
-    @SerializedName("created_date")
-    val created_date: String,
+    @ColumnInfo(name = "publisher")
+    @SerializedName("publisher")
+    val publisher: String,
 )

@@ -23,9 +23,6 @@ class BooksPresenter(
     private var disposables =  CompositeDisposable()
 
     override fun onFirstViewAttach() {
-//        disposables += bus.subscribe(UserUpdatedEvent::class) {
-//            displayUsers()
-//        }
 
         disposables +=
             networkStateRepository
@@ -63,7 +60,7 @@ class BooksPresenter(
     }
 
     fun displayBook(book: Book) =
-        router.navigateTo(BookScreen(book.title))
+        router.navigateTo(BookScreen(book.title, book.author))
 
     override fun onDestroy() {
         super.onDestroy()
