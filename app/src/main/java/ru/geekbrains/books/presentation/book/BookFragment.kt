@@ -1,5 +1,6 @@
 package ru.geekbrains.books.presentation.book
 
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import moxy.ktx.moxyPresenter
+import ru.geekbrains.books.R
 import ru.geekbrains.books.R.layout.fragment_book
 import ru.geekbrains.books.arguments
 import ru.geekbrains.books.data.book.model.Book
@@ -63,7 +65,23 @@ class BookFragment : AbsFragment(fragment_book), BookView {
             publisher.text = book.publisher
             description.text = book.description
             image.setImageFromUri(book.book_image)
+            onFavChanged(book)
         }
+    }
+
+    override fun onFavChanged(book: Book) {
+        viewBinding?.favourite?.setOnClickListener {
+            when (book.favourite) {
+                0 -> presenter.fav()
+                else -> presenter.unFav()
+            }
+        }
+        viewBinding?.favourite?.setImageDrawable(
+            when (book.favourite) {
+                1 -> resources.getDrawable(R.drawable.ic_baseline_favorite_24, context?.theme)
+                else -> resources.getDrawable(R.drawable.ic_baseline_favorite_border_24, context?.theme)
+            }
+        )
     }
 
     override fun showError(message: String?) {

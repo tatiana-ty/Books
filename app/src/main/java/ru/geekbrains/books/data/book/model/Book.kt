@@ -23,4 +23,6 @@ data class Book (
     @ColumnInfo(name = "publisher")
     @SerializedName("publisher")
     val publisher: String,
+    @ColumnInfo(name = "favourite")
+    @Transient val favourite: Int = 0
 )

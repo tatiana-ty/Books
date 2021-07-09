@@ -26,15 +26,42 @@ class BookPresenter @AssistedInject constructor(
         disposables +=
             booksRepository
                 .getBook(bookTitle, bookAuthor)
-                .observeOn(schedulers.background())
+                .observeOn(schedulers.main())
+                .subscribeOn(schedulers.background())
                 .subscribe(
                     ::onGetBookSuccess,
                     ::onGetBookError
                 )
     }
 
+    fun fav() {
+        disposables +=
+            booksRepository
+                .fav(bookTitle, bookAuthor)
+                .observeOn(schedulers.main())
+                .subscribeOn(schedulers.background())
+                .subscribe(
+                    ::onFavChanged
+                )
+    }
+
+    fun unFav() {
+        disposables +=
+            booksRepository
+                .unFav(bookTitle, bookAuthor)
+                .observeOn(schedulers.main())
+                .subscribeOn(schedulers.background())
+                .subscribe(
+                    ::onFavChanged
+                )
+    }
+
     private fun onGetBookSuccess(book: Book) {
         viewState.showBook(book)
+    }
+
+    private fun onFavChanged(book: Book) {
+        viewState.onFavChanged(book)
     }
 
     @Suppress("UNUSED_PARAMETER")

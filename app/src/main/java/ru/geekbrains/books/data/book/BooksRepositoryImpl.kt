@@ -17,18 +17,26 @@ class BooksRepositoryImpl
 ) : BooksRepository{
 
     override fun getBooks(): Observable<List<Book>> =
-//        try {
+        try {
             cloudBooksDataSource
                 .getBooks()
                 .flatMap(cacheBooksDataSource::retain)
-//        } catch (e: Exception) {
-//            println("here")
-//
-//            cacheBooksDataSource
-//                .getBooks()
-//        }
+        } catch (e: Exception) {
+            cacheBooksDataSource
+                .getBooks()
+        }
 
     override fun getBook(title: String, author: String): Single<Book> =
         cacheBooksDataSource
             .getBook(title, author)
+
+    override fun fav(title: String, author: String): Single<Book> =
+        cacheBooksDataSource.fav(title, author)
+
+    override fun unFav(title: String, author: String): Single<Book> =
+        cacheBooksDataSource.unFav(title, author)
+
+    override fun getFavs(): Single<List<Book>> =
+        cacheBooksDataSource.getFavs()
+
 }
